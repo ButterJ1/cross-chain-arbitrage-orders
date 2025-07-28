@@ -233,11 +233,11 @@ contract BasicPriceMonitor is Ownable, ReentrancyGuard {
         require(config.isActive, "Oracle not active");
         
         (
-            uint80 roundId,
+            , // roundId - not needed for basic price fetching
             int256 price256,
-            uint256 startedAt,
+            , // startedAt - not needed for basic price fetching
             uint256 updatedAt,
-            uint80 answeredInRound
+            // answeredInRound - not needed for basic price fetching
         ) = config.chainlinkFeed.latestRoundData();
         
         require(price256 > 0, "Invalid price from Chainlink");
@@ -261,9 +261,8 @@ contract BasicPriceMonitor is Ownable, ReentrancyGuard {
             return opportunity;
         }
         
-        // Calculate gas cost in ETH
+        // Calculate gas cost in wei
         uint256 gasCostWei = gasPrice * ARBITRAGE_GAS_LIMIT;
-        uint256 gasCostETH = gasCostWei; // Already in wei, convert to ETH terms for profit calc
         
         // Determine arbitrage direction and calculate profit
         if (prices.isEthereumHigher) {
