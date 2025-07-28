@@ -1,5 +1,5 @@
-// hardhat.config.js
 require("@nomicfoundation/hardhat-toolbox");
+require("@nomicfoundation/hardhat-verify");
 require("hardhat-gas-reporter");
 require("hardhat-contract-sizer");
 require("dotenv").config();
@@ -73,6 +73,14 @@ module.exports = {
         },
       },
     ],
+  },
+  etherscan: {
+    enabled: false,
+  },
+  sourcify: {
+    enabled: true,
+    apiUrl: 'https://sourcify.dev/server',
+    browserUrl: 'https://repo.sourcify.dev',
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

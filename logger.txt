@@ -1,0 +1,158 @@
+PS C:\Users\forbu\Downloads\cross-chain-arbitrage-orders> npm run test   
+
+> cross-chain-arbitrage-orders@1.0.0 test
+> hardhat test
+
+ ·------------------------|--------------------------------|--------------------------------·
+ |  Solc version: 0.8.19  ·  Optimizer enabled: true       ·  Runs: 200                     │
+ ·························|································|·································
+ |  Contract Name         ·  Deployed size (KiB) (change)  ·  Initcode size (KiB) (change)  │
+ ·························|································|·································
+ |  BasicPriceMonitor     ·                 4.562 (0.000)  ·                 4.702 (0.000)  │
+ ·························|································|·································
+ |  MockChainlinkFeed     ·                 0.672 (0.000)  ·                 0.736 (0.000)  │
+ ·------------------------|--------------------------------|--------------------------------·
+You're running a network fork starting from the latest block.
+Performance may degrade due to fetching data from the network with each run.
+If connecting to an archival node (e.g. Alchemy), we strongly recommend setting
+blockNumber to a fixed value to increase performance with a local cache.
+
+
+  BasicPriceMonitor
+    Deployment
+      ✔ Should set the right owner (54597ms)
+      ✔ Should initialize with correct constants
+    Oracle Configuration
+      ✔ Should initialize oracles correctly (46ms)
+      ✔ Should only allow owner to initialize oracles (69ms)
+    Price Updates
+      ✔ Should update prices correctly (11139ms)
+      ✔ Should emit PricesUpdated event
+      ✔ Should detect arbitrage opportunity when spread is significant
+      ✔ Should not detect arbitrage when spread is too small
+    Arbitrage Opportunity Detection
+      ✔ Should update gas price correctly
+      ✔ Should only allow owner to update gas price
+    Price Data Freshness
+      ✔ Should return true for fresh data
+      ✔ Should return false for stale data
+    Edge Cases
+      ✔ Should handle zero price gracefully
+      ✔ Should handle equal prices
+
+
+  17 passing (1m)
+
+PS C:\Users\forbu\Downloads\cross-chain-arbitrage-orders> npm run deploy:sepolia
+
+> cross-chain-arbitrage-orders@1.0.0 deploy:sepolia
+> hardhat run scripts/deploy-price-monitor.js --network sepolia
+
+ ·------------------------|--------------------------------|--------------------------------·
+ |  Solc version: 0.8.19  ·  Optimizer enabled: true       ·  Runs: 200                     │
+ ·························|································|·································
+ |  Contract Name         ·  Deployed size (KiB) (change)  ·  Initcode size (KiB) (change)  │
+ ·························|································|·································
+ |  BasicPriceMonitor     ·                 4.562 (0.000)  ·                 4.702 (0.000)  │
+ ·························|································|·································
+ |  MockChainlinkFeed     ·                 0.672 (0.000)  ·                 0.736 (0.000)  │
+ ·------------------------|--------------------------------|--------------------------------·
+
+Deploying BasicPriceMonitor to sepolia...
+
+Deploying with account: 0xf8F02eFc9Fc39DEdC87860E0E7F2adC17475937D
+Account balance: 0.312277577421084763 ETH
+BasicPriceMonitor deployed to: 0xF00717b0c8698863B3744B487E01cC51d60CF4dd
+Using SAME Sepolia feed for both chains (testnet mode)
+This simulates cross-chain with identical prices
+Initializing oracles...
+  Ethereum Chain Feed: 0x694AA1769357215DE4FAC081bf1f309aDC325306
+  Arbitrum Chain Feed: 0x694AA1769357215DE4FAC081bf1f309aDC325306
+Oracles initialized successfully
+
+Testing deployment...
+Testing price update...
+Price update successful, gas used: 145805
+
+ETH Prices:
+  Ethereum Price: $ 3880.2004
+  Arbitrum Price: $ 3880.2004
+  Spread: 0 basis points
+  Ethereum Higher: false
+
+Arbitrage Opportunity:
+  Is Profitable: false
+  Spread: 0 basis points
+  Estimated Profit: 0.0 ETH
+  Direction: ETH → ARB
+
+Testnet Explanation:
+  Both prices come from SAME oracle feed
+
+Deployment complete!
+
+Deployment Info:
+{
+  "address": "0xF00717b0c8698863B3744B487E01cC51d60CF4dd",
+  "network": "sepolia",
+  "deployer": "0xf8F02eFc9Fc39DEdC87860E0E7F2adC17475937D",
+  "ethereumFeed": "0x694AA1769357215DE4FAC081bf1f309aDC325306",
+  "arbitrumFeed": "0x694AA1769357215DE4FAC081bf1f309aDC325306",
+  "deployedAt": "2025-07-28T11:55:28.501Z",
+  "blockNumber": 8860711,
+  "chainId": 11155111
+}
+
+PS C:\Users\forbu\Downloads\cross-chain-arbitrage-orders> npm run test:deployed
+
+> cross-chain-arbitrage-orders@1.0.0 test:deployed
+> hardhat run scripts/test-price-monitor.js --network sepolia
+
+ ·------------------------|--------------------------------|--------------------------------·
+ |  Solc version: 0.8.19  ·  Optimizer enabled: true       ·  Runs: 200                     │
+ ·························|································|·································
+ |  Contract Name         ·  Deployed size (KiB) (change)  ·  Initcode size (KiB) (change)  │
+ ·························|································|·································
+ |  BasicPriceMonitor     ·                 4.562 (0.000)  ·                 4.702 (0.000)  │
+ ·························|································|·································
+ |  MockChainlinkFeed     ·                 0.672 (0.000)  ·                 0.736 (0.000)  │
+ ·------------------------|--------------------------------|--------------------------------·
+Testing Price Monitor functionality...
+
+Contract Address: 0xF00717b0c8698863B3744B487E01cC51d60CF4dd
+Network: sepolia
+Chain ID: 11155111
+
+Verifying contract...
+  Contract Owner: 0xf8F02eFc9Fc39DEdC87860E0E7F2adC17475937D
+
+Checking oracle configuration...
+  Ethereum Oracle:
+    Feed Address: 0x694AA1769357215DE4FAC081bf1f309aDC325306
+    Is Active: true
+  Arbitrum Oracle:
+    Feed Address: 0x694AA1769357215DE4FAC081bf1f309aDC325306
+    Is Active: true
+
+Updating ETH prices...
+Update successful, gas used: 88905
+
+Current Price Data:
+  Ethereum Price: $ 3880.2004
+  Arbitrum Price: $ 3880.2004
+  Spread: 0 basis points
+  Ethereum Higher: false
+  Last Update: 2025/7/28 下午7:58:24
+
+Arbitrage Opportunity:
+  Is Profitable: false
+  Spread: 0 basis points
+  Estimated Profit: 0.0 ETH
+  Gas Estimate: 0.007 ETH
+  Direction: ETH → ARB
+
+Quick Profitability Check:
+  Currently Profitable: false
+  Current Spread: 0 basis points
+
+All tests passed! Contract is working correctly!

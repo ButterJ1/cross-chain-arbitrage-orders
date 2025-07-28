@@ -7,11 +7,12 @@
     "compile": "hardhat compile",
     "test": "hardhat test",
     "test:gas": "cross-env REPORT_GAS=true hardhat test",
+    "deploy:hardhat": "hardhat run scripts/deploy-price-monitor.js --network hardhat",
     "deploy:local": "hardhat run scripts/deploy-price-monitor.js --network localhost",
     "deploy:sepolia": "hardhat run scripts/deploy-price-monitor.js --network sepolia",
     "deploy:arbitrum-sepolia": "hardhat run scripts/deploy-price-monitor.js --network arbitrumSepolia",
     "test:deployed": "hardhat run scripts/test-price-monitor.js --network sepolia",
-    "start:node": "hardhat node",
+    "node": "hardhat node",
     "clean": "hardhat clean",
     "size": "hardhat size-contracts",
     "coverage": "hardhat coverage"
