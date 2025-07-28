@@ -69,8 +69,8 @@ async function main() {
             // Check price data
             const priceData = await priceMonitor.getTokenPriceData("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE");
             console.log("📊 ETH Prices:");
-            console.log("  Ethereum:", ethers.utils.formatEther(priceData.ethereumPrice));
-            console.log("  Arbitrum:", ethers.utils.formatEther(priceData.arbitrumPrice));
+            console.log("  Ethereum:", ethers.formatEther(priceData.ethereumPrice));
+            console.log("  Arbitrum:", ethers.formatEther(priceData.arbitrumPrice));
             console.log("  Spread:", priceData.spread.toString(), "basis points");
         }
     } catch (error) {

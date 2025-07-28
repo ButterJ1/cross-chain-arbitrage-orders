@@ -27,11 +27,11 @@ async function testPriceMonitor() {
         const priceData = await priceMonitor.getTokenPriceData(ETH_ADDRESS);
         
         console.log("\n📊 Current Price Data:");
-        console.log("  Ethereum Price: $", ethers.utils.formatEther(priceData.ethereumPrice));
-        console.log("  Arbitrum Price: $", ethers.utils.formatEther(priceData.arbitrumPrice));
+        console.log("  Ethereum Price: $", ethers.formatEther(priceData.ethereumPrice));
+        console.log("  Arbitrum Price: $", ethers.formatEther(priceData.arbitrumPrice));
         console.log("  Spread:", priceData.spread.toString(), "basis points");
         console.log("  Ethereum Higher:", priceData.isEthereumHigher);
-        console.log("  Last Update:", new Date(priceData.timestamp * 1000).toLocaleString());
+        console.log("  Last Update:", new Date(Number(priceData.timestamp) * 1000).toLocaleString());
         
         // Check arbitrage opportunity
         const opportunity = await priceMonitor.getArbitrageOpportunity();
@@ -39,8 +39,8 @@ async function testPriceMonitor() {
         console.log("\n🎯 Arbitrage Opportunity:");
         console.log("  Is Profitable:", opportunity.isProfitable);
         console.log("  Spread:", opportunity.spreadBasisPoints.toString(), "basis points");
-        console.log("  Estimated Profit:", ethers.utils.formatEther(opportunity.estimatedProfit), "ETH");
-        console.log("  Gas Estimate:", ethers.utils.formatEther(opportunity.gasEstimate), "ETH");
+        console.log("  Estimated Profit:", ethers.formatEther(opportunity.estimatedProfit), "ETH");
+        console.log("  Gas Estimate:", ethers.formatEther(opportunity.gasEstimate), "ETH");
         console.log("  Direction:", opportunity.isEthToArb ? "ETH → ARB" : "ARB → ETH");
         
         // Check if profitable
