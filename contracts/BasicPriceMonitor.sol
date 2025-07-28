@@ -192,9 +192,13 @@ contract BasicPriceMonitor is Ownable, ReentrancyGuard {
         if (ethPrice > arbPrice) {
             spread = ((ethPrice - arbPrice) * 10000) / arbPrice;
             isEthereumHigher = true;
-        } else {
+        } else if (arbPrice > ethPrice) {
             spread = ((arbPrice - ethPrice) * 10000) / ethPrice;
             isEthereumHigher = false;
+        } else {
+            // Prices are equal
+            spread = 0;
+            isEthereumHigher = false; // Doesn't matter when equal
         }
         
         // Update stored data
@@ -263,26 +267,35 @@ contract BasicPriceMonitor is Ownable, ReentrancyGuard {
         
         // Calculate gas cost in wei
         uint256 gasCostWei = gasPrice * ARBITRAGE_GAS_LIMIT;
+        opportunity.gasEstimate = gasCostWei;
         
-        // Determine arbitrage direction and calculate profit
+        // Determine arbitrage direction and calculate profit (with overflow protection)
         if (prices.isEthereumHigher) {
             // Buy on Arbitrum, sell on Ethereum
             opportunity.isEthToArb = false;
             opportunity.spreadBasisPoints = prices.spread;
             
-            // Simplified profit calculation (will be refined)
-            // Assumes 1 ETH arbitrage: buy at arbPrice, sell at ethPrice
-            opportunity.estimatedProfit = prices.ethereumPrice - prices.arbitrumPrice - gasCostWei;
+            // Safe profit calculation - check for underflow
+            uint256 totalCost = prices.arbitrumPrice + gasCostWei;
+            if (prices.ethereumPrice > totalCost) {
+                opportunity.estimatedProfit = prices.ethereumPrice - totalCost;
+            } else {
+                opportunity.estimatedProfit = 0; // Would result in loss
+            }
         } else {
             // Buy on Ethereum, sell on Arbitrum  
             opportunity.isEthToArb = true;
             opportunity.spreadBasisPoints = prices.spread;
             
-            // Assumes 1 ETH arbitrage: buy at ethPrice, sell at arbPrice
-            opportunity.estimatedProfit = prices.arbitrumPrice - prices.ethereumPrice - gasCostWei;
+            // Safe profit calculation - check for underflow
+            uint256 totalCost = prices.ethereumPrice + gasCostWei;
+            if (prices.arbitrumPrice > totalCost) {
+                opportunity.estimatedProfit = prices.arbitrumPrice - totalCost;
+            } else {
+                opportunity.estimatedProfit = 0; // Would result in loss
+            }
         }
         
-        opportunity.gasEstimate = gasCostWei;
         opportunity.isProfitable = (
             opportunity.estimatedProfit > 0 && 
             opportunity.spreadBasisPoints >= minProfitBasisPoints
